@@ -10,73 +10,44 @@ namespace AdventOfCode
         public static void Main(string[] args)
         {
             _input = File.ReadAllText("../../../input.txt");
-
+    
             Console.WriteLine("Part 1");
             Part1();
             
             Console.WriteLine("\nPart 2");
             Part2();
         }
-
+    
         private static void Part1()
         {
             var values = StringUtils.StringToStrings(_input, '\n');
-
+    
             int wordsWithDoubles = 0;
             int wordsWithTriples = 0;
-
+    
             foreach (var word in values)
             {
-                var letters = new Dictionary<char, int>();
+                var letterCounts = new Dictionary<char, int>();
                 
                 bool doubleFound = false;
                 bool tripleFound = false;
-
-                foreach (char letter in word)
+    
+                foreach (char c in word)
                 {
-                    if (letters.ContainsKey(letter))
-                    {
-                        var current = letters[letter];
-                        letters[letter] = ++current;
-
-                        if (current > 3)
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        letters[letter] = 1;
-                    }
+                    letterCounts.TryGetValue(c, out var current); 
+                    letterCounts[c] = current + 1;
                 }
-
-                foreach (var kvp in letters)
+    
+                foreach (var count in letterCounts.Values)
                 {
-                    if (doubleFound && tripleFound)
+                    if (count == 2 && !doubleFound)
                     {
-                        break;
-                    }
-                    
-                    if (kvp.Value == 2)
-                    {
-                        if (doubleFound)
-                        {
-                            continue;
-                        }
-
                         doubleFound = true;
-
                         ++wordsWithDoubles;
                     }
-                    else if (kvp.Value == 3)
+                    else if (count == 3 && !tripleFound)
                     {
-                        if (tripleFound)
-                        {
-                            continue;
-                        }
-
                         tripleFound = true;
-
                         ++wordsWithTriples;
                     }
                 }
@@ -84,46 +55,38 @@ namespace AdventOfCode
             
             Console.WriteLine($"Double words: {wordsWithDoubles}, Triple words: {wordsWithTriples}. Checksum: {wordsWithDoubles * wordsWithTriples}");
         }
-
+    
         private static void Part2()
         {
-            var words = StringUtils.StringToStrings(_input, '\n');
-
-            var smallestDiff = Int32.MaxValue;
-            string firstWord = words[0];
-            string secondWord = words[0];
-
+            List<string> words = StringUtils.StringToStrings(_input, '\n');
+    
+            var smallestDiff = int.MaxValue;
+            var firstWord = string.Empty;
+            var secondWord = string.Empty;
+    
             foreach (var word in words)
             {
                 foreach (var otherWord in words)
                 {
+                    // Ignore self
                     if (word == otherWord)
                     {
                         continue;
                     }
                     
-                    int differences = 0;
+                    // For each index of the two words, find count of differences
+                    var differences = word.Where((t, i) => t != otherWord[i]).Count();
                     
-                    for (int i = 0; i < word.Length; ++i)
-                    {
-                        if (word[i] != otherWord[i])
-                        {
-                            differences++;
-                        }
-                    }
-
                     if (differences < smallestDiff)
                     {
                         firstWord = word;
                         secondWord = otherWord;
-
                         smallestDiff = differences;
                     }
                 }
             }
             
             Console.WriteLine($"Closest words: {firstWord} | {secondWord}");
-
             Console.Write("Matching chars: ");
             for (var i = 0; i < firstWord.Length; ++i)
             {
@@ -133,26 +96,26 @@ namespace AdventOfCode
                 }
             }
         }
-
+    
         private static string _input;
     }
-
+    
     public static class StringUtils
     {   
         public static List<int> StringToInts(string input, params char[] separators)
         {
             var tokens = input.Split(separators);
-
+    
             return tokens.Select(t => int.Parse(t)).ToList();
         }
-
+    
         public static List<float> StringToFloats(string input, params char[] separators)
         {
             var tokens = input.Split(separators);
-
+    
             return tokens.Select(t => float.Parse(t)).ToList();
         }
-
+    
         public static List<string> StringToStrings(string input, params char[] separators)
         {
             return input.Split(separators).ToList();
