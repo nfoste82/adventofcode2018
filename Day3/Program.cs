@@ -164,26 +164,4 @@ namespace AdventOfCode
     
         private static string _input;
     }
-    
-    public static class StringUtils
-    {   
-        public static List<int> StringToInts(string input, params char[] separators)
-        {
-            var tokens = input.Split(separators);
-    
-            return tokens.Select(t => int.Parse(t)).ToList();
-        }
-    
-        public static List<float> StringToFloats(string input, params char[] separators)
-        {
-            var tokens = input.Split(separators);
-    
-            return tokens.Select(t => float.Parse(t)).ToList();
-        }
-    
-        public static List<string> StringToStrings(string input, params char[] separators)
-        {
-            return input.Split(separators).ToList();
-        }
-    }
 }
