@@ -11,14 +11,11 @@ namespace AdventOfCode
         {
             _input = File.ReadAllText("../../../input.txt");
     
-            Console.WriteLine("Part 1");
-            Part1();
-            
-            Console.WriteLine("Part 2");
-            Part2();
+            Console.WriteLine($"Part 1: {Part1()}");
+            Console.WriteLine($"Part 2: {Part2()}");
         }
     
-        private static void Part1()
+        private static int Part1()
         {
             var lines = _input.Split('\n');
             
@@ -146,10 +143,12 @@ namespace AdventOfCode
             }
             
             int sleepiestMinute = timesSleptPerMinute.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-            Console.WriteLine($"{sleepiestGuard}, {sleepiestMinute}");
+            //Console.WriteLine($"Guard: {sleepiestGuard}, minute slept most during: {sleepiestMinute}");
+
+            return sleepiestGuard * sleepiestMinute;
         }
     
-        private static void Part2()
+        private static int Part2()
         {
             var lines = _input.Split('\n');
             
@@ -241,9 +240,32 @@ namespace AdventOfCode
                 }
             }
             
-            Console.WriteLine($"Guard ID {guardID}, Minute ID {minuteID}");
+            //Console.WriteLine($"Guard: {guardID}, Minute slept most during: {minuteID}");
+            return guardID * minuteID;
         }
     
         private static string _input;
+    }
+    
+    public static class StringUtils
+    {   
+        public static List<int> StringToInts(string input, params char[] separators)
+        {
+            var tokens = input.Split(separators);
+    
+            return tokens.Select(t => int.Parse(t)).ToList();
+        }
+    
+        public static List<float> StringToFloats(string input, params char[] separators)
+        {
+            var tokens = input.Split(separators);
+    
+            return tokens.Select(t => float.Parse(t)).ToList();
+        }
+    
+        public static List<string> StringToStrings(string input, params char[] separators)
+        {
+            return input.Split(separators).ToList();
+        }
     }
 }
